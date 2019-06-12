@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/template_head::head('Cart')">
+</head>
+<body>
+<header th:replace="common/template_menu::header">
+</header>
+
+<div id="Content">
+    <div id="BackLink">
+        <a href="/catalog/main">Return to Main Menu</a>
+    </div>
+
+    <div id="Catalog">
+
+        <div id="Cart">
+
+            <h2>Shopping Cart</h2>
+            <form action="/cart/updateCartQuantities" method="post">
+                <table>
+                    <tr>
+                        <th><b>Item ID</b></th>
+                        <th><b>Product ID</b></th>
+                        <th><b>Description</b></th>
+                        <th><b>In Stock?</b></th>
+                        <th><b>Quantity</b></th>
+                        <th><b>List Price</b></th>
+                        <th><b>Total Cost</b></th>
+                        <th>&nbsp;</th>
+                    </tr>
+                        <tr th:if="${session.cart.numberOfItems == 0}">
+                            <td colspan="8"><b>Your cart is empty.</b></td>
+                        </tr>
+
+                        <tr th:each="cartItem:${session.cart.cartItems}">
+                            <td>
+                                <a th:href="@{'/catalog/item?itemId='+${cartItem.item.itemId}}" th:text="${cartItem.item.itemId}"></a>
+                            </td>
+                            <td th:text="${cartItem.item.product.productId}">
+                            </td>
+                            <td th:value="|${cartItem.item.attribute1}, ${cartItem.item.attribute2},
+                                ${cartItem.item.attribute3}, ${cartItem.item.attribute4},
+                                ${cartItem.item.attribute5},${cartItem.item.product.name}|">
+                            </td>
+                            <td th:value="${cartItem.inStock}">
+                            </td>
+                            <td>
+                                <input type="text" th:name="${cartItem.item.itemId}"  th:value="${cartItem.quantity}"/>
+                            </td>
+                            <td th:text="${#numbers.setFormatCurrency(cartItem.item.listPrice)}">
+                            </td>
+                            <td th:text="${#numbers.setFormatCurrency(cartItem.total)}">
+                            </td>
+                            <td>
+                                <a class="Button" th:href="@{'/cart/removeItemFromCart?workingItemId='+${cartItem.item.itemId}}">Remove</a>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td colspan="5" th:utext="'Sub Total:' + ${#numbers.setFormatCurrency(session.cart.subTotal)}"> </td>
+                        <td colspan="2"><input  class="Button" type="submit" value="Update Cart"/></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </form>
+
+            <a href="/order/toNewOrder" class="Button" th:if="${session.cart.numberOfItems > 0}">Proceed to Checkout</a>
+        </div>
+
+        <div id="Separator">&nbsp;</div>
+    </div>
+
+</div>
+
+<footer th:replace="common/template_menu::footer">
+</footer>
+</body>
+</html>

@@ -1,46 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/template_head::head('Product:'+${product.name})">
+<head th:replace="common/template_head::head('MyPetstore Main')">
 
 </head>
 <body>
-    <header th:replace="common/template_menu::header">
+<header th:replace="common/template_menu::header"></header>
 
-    </header>
-    <div id="BackLink">
-        <a href="/catalog/category?categoryId=${ }">Return to ${requestScope.product.categoryId}</a>
-    </div>
+</header>
+<div id="Content">
+<div id="BackLink">
+    <!--/*@thymesVar id="product" type="com.software.jpetstore.domain.Product"*/-->
+    <a th:href="@{/catalog/category(categoryId=${product.categoryId},productId=${product.productId})}" th:text="'Return to '+ ${product.categoryId}"></a>
+</div>
 
-    <div id="Catalog">
+<div id="Catalog">
 
-        <h2>${requestScope.product.name}</h2>
-        <table>
-            <tr>
-                <th>Item ID</th>
-                <th>Product ID</th>
-                <th>Description</th>
-                <th>List Price</th>
-                <th>&nbsp;</th>
+    <h2 th:text="${product.name}"></h2>
+
+    <table>
+        <tr>
+            <th>Item ID</th>
+            <th>Product ID</th>
+            <th>Description</th>
+            <th>List Price</th>
+            <th> </th>
+        </tr>
+            <!--/*@thymesVar id="itemList" type="com.software.jpetstore.domain.Item"*/-->
+            <tr th:each="item : ${itemList}">
+                <td>
+                    <a th:href="@{/catalog/item(itemId=${item.itemId},productId=${item.product.productId})}" th:text="${item.itemId}"></a>
+                </td>
+                <!--/*@thymesVar id="product" type="com.software.jpetstore.domain.Product"*/-->
+                <td th:text="${item.product.productId}">
+
+                </td>
+                <td th:text="${item.attribute1}+${item.attribute2}+${item.attribute3}+${item.attribute4}+${item.attribute5}+${product.name}">
+                </td>
+                <td th:text="${#numbers.formatCurrency(item.listPrice)}"></td>
+                <td>
+                    <!--/*@thymesVar id="product" type="com.software.jpetstore.domain.Product"*/-->
+                    <a th:href="@{/cart/addItemToCart(workingItemId=${item.itemId},productId=${item.product.productId})}">Add to Cart</a>
+                </td>
             </tr>
-            <c:forEach var="item" items="${requestScope.itemList}">
-                <tr>
-                    <td>
-                        <a href="viewItem?itemId=${item.itemId}">${item.itemId}</a>
-                    </td>
-                    <td>${item.product.productId}</td>
-                    <td>${item.attribute1} ${item.attribute2} ${item.attribute3}
-                        ${item.attribute4} ${item.attribute5} ${requestScope.product.name}</td>
-                    <td><fmt:formatNumber value="${item.listPrice}"
-                                          pattern="$#,##0.00" /></td>
-                    <td>
-                        <a href="addItemToCart?workingItemId=${item.itemId}">Add to Cart</a>
-                    </td>
-                </tr>
-            </c:forEach>
-        </table>
-    </div>
-    <footer th:replace="common/template_menu::footer">
+    </table>
 
-    </footer>
+</div>
+
+</div>
+<footer th:replace="common/template_menu::footer"></footer>
+
 </body>
 </html>

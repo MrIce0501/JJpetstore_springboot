@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="common/template_head::head('MyPetStore Main')">
-
+<head th:replace="common/template_head::head('MyPetstore Main')">
+    <meta charset="UTF-8">
+    <title>Item</title>
 </head>
 <body>
-    <header th:replace="common/template_menu::header">
+<header th:replace="common/template_menu::header"></header>
+<div id="Content">
+<div id="BackLink">
+    <a th:href="@{/catalog/product(productId=${product.productId})}" th:text="'Return to '+${product.productId}">
 
-    </header>
-    <div id="Content">
-        <div id="BackLink">
-            <a href="viewProduct?productId=${requestScope.product.productId}">Return to ${requestScope.product.productId}</a>
-        </div>
+    </a>
+</div>
 
-        <div id="Catalog">
+<div id="Catalog">
 
-            <table>
-                <tr>
-                    <td th:text="$               ">${requestScope.product.description}</td>
-                </tr>
-                <tr>
-                    <td><b> ${requestScope.item.itemId} </b></td>
-                </tr>
-                <tr>
-                    <td><b><font size="4"> ${requestScope.item.attribute1}
-                        ${requestScope.item.attribute2} ${requestScope.item.attribute3}
-                        ${requestScope.item.attribute4} ${requestScope.item.attribute5}
-                        ${requestScope.product.name} </font></b></td>
-                </tr>
-                <tr>
-                    <td>${requestScope.product.name}</td>
-                </tr>
-                <tr>
-                    <td><c:if test="${requestScope.item.quantity <= 0}">
-                        Back ordered.
-                    </c:if> <c:if test="${requestScope.item.quantity > 0}">
-                        ${requestScope.item.quantity} in stock.
-                    </c:if></td>
-                </tr>
-                <tr>
-                    <td><fmt:formatNumber value="${requestScope.item.listPrice}"
-                                          pattern="$#,##0.00" /></td>
-                </tr>
+    <table>
+        <tr>
+            <td th:utext="${product.description}"></td>
+        </tr>
+        <tr>
+            <td><b th:text="${item.itemId}">  </b></td>
+        </tr>
+        <tr>
+            <td><b><!--/*@thymesVar id="item" type="com.software.jpetstore.domain.Item"*/-->
+            <font size="4" th:text="${item.attribute1}+${item.attribute2}+${item.attribute3}+${item.attribute4}+${item.attribute5}+${product.name}">  </font></b></td>
+        </tr>
+        <tr>
+            <td th:text="${product.name}"></td>
+        </tr>
+        <tr>
+            <td th:if="${item.quantity} le 0">
+                Back ordered.
+            </td>
+            <td th:if="${item.quantity} gt 0" th:text="${item.quantity}+'in stock.'"> </td>
 
-                <tr>
-                    <td>
-                        <a class="Button" href="addItemToCart?workingItemId=${item.itemId}">Add to Cart</a>
-                    </td>
-                </tr>
-            </table>
+        </tr>
+        <tr>
+        </tr>
 
-        </div>
-    </div>
-    <footer th:replace="common/template_menu::footer">
+        <tr>
+            <td>
+                <a th:href="@{/cart/addItemToCart(workingItemId=${item.itemId})}">Add to Cart</a>
+            </td>
+        </tr>
+    </table>
 
-    </footer>
+</div>
+</div>
+<footer th:replace="common/template_menu::footer"></footer>
+
 </body>
 </html>
